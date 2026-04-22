@@ -15,18 +15,25 @@
     }
     h1 { font-size: 24px; border-bottom: 2px solid #4285f4; padding-bottom: 10px; }
     h2 { font-size: 18px; margin-top: 32px; color: #4285f4; }
+    h3 { font-size: 16px; margin-top: 20px; }
     p, li { font-size: 15px; }
     ul { padding-left: 20px; }
+    code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
     .updated { color: #888; font-size: 13px; }
     .note { background: #fff8dc; border-left: 4px solid #f4b400; padding: 10px 14px; margin: 16px 0; }
     .contact { background: #f5f9ff; border-left: 4px solid #4285f4; padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+    .purpose { background: #eef7ee; border-left: 4px solid #34a853; padding: 12px 14px; margin: 16px 0; }
+    .pledge { background: #f5f9ff; border-left: 4px solid #4285f4; padding: 10px 14px; margin: 16px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+    th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #f5f9ff; }
   </style>
 </head>
 <body>
   <h1>プライバシーポリシー</h1>
-  <p class="updated">最終更新日: 2026年4月22日</p>
+  <p class="updated">最終更新日: 2026年4月22日 ／ バージョン: 1.2.0</p>
 
-  <p>本プライバシーポリシーは、Chrome拡張機能「CPAPレポート自動解析」（以下「本拡張機能」）における
+  <p>本プライバシーポリシーは、Chrome拡張機能「CPAP / SAS レポート自動解析」（以下「本拡張機能」）における
   ユーザーデータの取り扱いについて説明します。</p>
 
   <div class="note">
@@ -34,59 +41,188 @@
     開発元は春日すぐファミリークリニック（福岡県福岡市南区）です。
   </div>
 
-  <h2>1. 拡張機能が扱うデータ</h2>
-  <p>本拡張機能は、ユーザーが拡張機能のアイコンをクリックし、ボタンを押した時にのみ、以下のデータを処理します。</p>
+  <!-- 単一の目的 -->
+  <h2>1. 単一の目的（Single Purpose）</h2>
+  <div class="purpose">
+    <strong>本拡張機能の唯一の目的:</strong><br>
+    医療従事者が、CPAP（持続陽圧呼吸療法）治療レポート、および SAS（睡眠時無呼吸症候群）検査レポートのPDFから治療指標を抽出し、
+    患者さん向けの説明メッセージの下書きを作成する作業を補助することです。<br>
+    本拡張機能は、この目的以外の機能（広告表示・ユーザー追跡・SNS連携・分析計測など）を一切持ちません。
+  </div>
+
+  <!-- 扱うデータ -->
+  <h2>2. 拡張機能が扱うデータ</h2>
+  <p>本拡張機能は、ユーザーが拡張機能のアイコンをクリックし、ボタンを押した時にのみ、以下のデータを処理します。
+  Chrome ウェブストアのデータ使用フォームで申告したカテゴリと一致するように、以下に分類して開示します。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Chrome ウェブストアの分類</th>
+        <th>本拡張機能における具体的内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>健康に関する情報</strong></td>
+        <td>PDFから抽出される治療指標（AHI・RDI・ODI・最低SpO2・総睡眠時間・CPAP使用時間・残存AHI・リーク量・PR など）</td>
+      </tr>
+      <tr>
+        <td><strong>ウェブサイトのコンテンツ</strong></td>
+        <td>ユーザーが操作した時に取得する、現在表示中のCPAP/SAS検査レポートPDFのテキスト。
+        テキスト層を持たない画像PDFの場合は、PDFファイル本体（バイナリ）。</td>
+      </tr>
+      <tr>
+        <td><strong>個人を特定できる情報</strong></td>
+        <td>原則として取得・保存しません。Gemini APIへ送信する際のプロンプトでも、
+        「氏名・生年月日・住所等の個人を特定する情報を読み取らない／出力に含めない」よう明示しています。
+        ただし、画像PDF（スキャンPDF）には患者氏名等が画像として含まれる場合があり、
+        その場合はPDFファイル本体としてGemini APIに一時送信されます（後述 5-2 項）。</td>
+      </tr>
+      <tr>
+        <td><strong>認証に関する情報</strong></td>
+        <td>ユーザーが任意で設定する Google Gemini API キー（ユーザーの端末内にのみ保存）。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>本拡張機能は、以下のデータを <strong>収集しません</strong>:
+  位置情報、ブラウジング履歴、検索履歴、財務情報、決済情報、通信内容、その他生体情報（指紋・顔画像など）。</p>
+
+  <!-- データの保存 -->
+  <h2>3. データの保存と保持期間</h2>
   <ul>
-    <li><strong>PDFファイルの内容</strong>: 現在表示中のCPAP治療レポート・SAS（睡眠時無呼吸症候群）検査レポートPDFのテキスト・画像</li>
-    <li><strong>抽出された治療指標</strong>: AHI・RDI・ODI・最低SpO2・総睡眠時間・CPAP使用時間・残存AHI など、PDFから抽出される医学的指標</li>
-    <li><strong>Gemini APIキー</strong>: ユーザーが任意で設定するGoogle Gemini APIキー</li>
+    <li><strong>PDFテキスト・抽出された数値・下書きメッセージ</strong>: 処理結果は、ブラウザのローカルストレージ
+      （<code>chrome.storage.local</code>）に一時的に保持されます。これは以下のいずれかの条件で消去されます。
+      <ul>
+        <li>PDFの読み込みから <strong>30分が経過した時</strong>（<code>chrome.alarms</code> による自動消去）</li>
+        <li>拡張機能の「<strong>保存データを今すぐ削除</strong>」ボタンを押した時（手動消去）</li>
+        <li>ブラウザを再起動した時（次回起動時に自動消去）</li>
+      </ul>
+      開発者の運営する外部サーバーへの送信・保存は一切行いません。
+    </li>
+    <li><strong>Gemini APIキー</strong>: ユーザーのブラウザ内（<code>chrome.storage.local</code>）にのみ保存され、
+      開発者を含む第三者には送信されません。手動削除以外では削除されません。</li>
+    <li><strong>クリップボード</strong>: 自動生成された下書きメッセージは、ユーザーの利便性のためにOSのクリップボードへコピーされます。
+      クリップボードの内容はユーザーのOSの管理下にあります。</li>
   </ul>
-  <p>本拡張機能は、患者氏名・生年月日・住所等の個人を特定する情報を意図的に抽出・保存しない設計となっています。Gemini Vision APIによる画像PDFの数値抽出時も、プロンプト内で「氏名・生年月日・住所等の個人情報を読み取らない／出力に含めない」よう明示的に指示しています。</p>
 
-  <h2>2. データの保存</h2>
-  <ul>
-    <li><strong>PDF・抽出された数値</strong>: ブラウザのメモリ上で一時的に処理され、ポップアップを閉じた時点で消去されます。本拡張機能は、これらをローカルストレージや外部サーバーに永続的に保存しません</li>
-    <li><strong>Gemini APIキー</strong>: ユーザーのブラウザ内（<code>chrome.storage.local</code>）にのみ保存され、開発者を含む第三者には送信されません</li>
-    <li><strong>クリップボード</strong>: 自動生成された下書きメッセージは、ユーザーの利便性のためにクリップボードへコピーされます。クリップボードの内容はユーザーのOSの管理下にあります</li>
-  </ul>
+  <!-- 権限と用途 -->
+  <h2>4. 拡張機能が要求する権限と用途</h2>
+  <p>本拡張機能が <code>manifest.json</code> で要求する権限と、その用途は以下のとおりです。
+  いずれも本拡張機能の単一の目的を達成するために必要最小限のものです。</p>
+  <table>
+    <thead>
+      <tr>
+        <th>権限</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>activeTab</code> / <code>tabs</code> / <code>scripting</code></td>
+        <td>「現在のタブのPDFを読み込む」ボタンを押した時に、現在表示中のタブからPDFファイルを取得するため。</td>
+      </tr>
+      <tr>
+        <td><code>storage</code></td>
+        <td>抽出された治療指標、下書きメッセージ、APIキーをブラウザ内に一時保存するため。</td>
+      </tr>
+      <tr>
+        <td><code>clipboardWrite</code></td>
+        <td>生成された下書きメッセージを医師がそのまま電子カルテへ貼り付けられるよう、クリップボードへコピーするため。</td>
+      </tr>
+      <tr>
+        <td><code>offscreen</code></td>
+        <td>PDF.js ライブラリを Service Worker 外の文書環境で実行するため（Manifest V3 の制約による）。
+        ネットワーク通信や外部リソースへのアクセスは行いません。</td>
+      </tr>
+      <tr>
+        <td><code>alarms</code></td>
+        <td>解析結果データを 30分後に自動削除するためのタイマーを設定するため。</td>
+      </tr>
+      <tr>
+        <td>ホスト権限 <code>&lt;all_urls&gt;</code></td>
+        <td>電子カルテシステム（デジカル等）でPDFビューワーが開かれるドメインが固定でないため。
+        自動的なデータ収集・追跡・ブラウジング履歴の取得は一切行いません。</td>
+      </tr>
+      <tr>
+        <td>ホスト権限 <code>https://generativelanguage.googleapis.com/*</code></td>
+        <td>ユーザーが任意でAPIキーを設定した場合に、Google Gemini API へ通信するため。</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h2>3. 外部サービスへのデータ送信</h2>
-  <p>本拡張機能は、開発者が運営するサーバーへのデータ送信を一切行いません。ただし、ユーザーが任意で有効化する以下の機能を使用する場合に限り、ユーザー自身のGemini APIキーを通じてGoogle Gemini APIへデータが送信されます。</p>
+  <!-- 外部サービスへの送信 -->
+  <h2>5. 外部サービスへのデータ送信</h2>
+  <p>本拡張機能は、開発者が運営するサーバーへのデータ送信を一切行いません。
+  ただし、ユーザーが任意で Gemini API キーを設定した場合に限り、ユーザー自身のキーを通じて
+  Google Gemini API へデータが送信されます。</p>
 
-  <h3 style="font-size:16px; margin-top:20px;">3-1. AI整文機能（任意）</h3>
+  <h3>5-1. AI整文機能（任意）</h3>
   <ul>
     <li>送信先: <code>https://generativelanguage.googleapis.com/</code>（Google Gemini API）</li>
     <li>送信内容: 数値を含む下書きメッセージ（氏名・個人を特定する情報を含まない）</li>
     <li>用途: 下書き文をより自然な日本語に整形するため</li>
+    <li>実行タイミング: ユーザーが「✨ Geminiで整える」ボタンを押した時のみ</li>
   </ul>
 
-  <h3 style="font-size:16px; margin-top:20px;">3-2. 画像PDFのVision APIフォールバック（自動）</h3>
+  <h3>5-2. 画像PDFのGemini APIによる数値抽出（自動）</h3>
   <ul>
-    <li>送信先: <code>https://generativelanguage.googleapis.com/</code>（Google Gemini Vision API）</li>
-    <li>送信内容: テキスト層を持たないスキャンPDFのページ画像</li>
+    <li>送信先: <code>https://generativelanguage.googleapis.com/</code>（Google Gemini API）</li>
+    <li>送信内容: テキスト層を持たないスキャンPDFの<strong>ファイル本体（バイナリ全体）</strong></li>
     <li>用途: 画像PDFから治療指標の数値を抽出するため</li>
-    <li>プロンプトでGeminiに対し「氏名・生年月日・住所等の個人情報を読み取らない／出力に含めない」よう明示的に指示しています</li>
+    <li>実行タイミング: PDF読み込み時にテキスト抽出ができなかった場合のみ自動で実行</li>
+    <li>プロンプトで Gemini に対し「氏名・生年月日・住所等の個人情報を読み取らない／出力に含めない」よう明示的に指示しています</li>
   </ul>
-
   <div class="note">
-    <strong>ご注意:</strong> 画像PDFには患者氏名が画像として含まれる可能性があるため、Google AI Studioの<strong>有料APIキー</strong>のご利用を推奨します。無料枠のAPIキーで送信されたデータはGoogleのモデル学習に利用される可能性があります（詳細はGoogleの利用規約をご確認ください）。
+    <strong>v1.2.0 における仕様変更:</strong> 従来はブラウザ内でPDFをページ画像（JPEG）に変換してから送信していましたが、
+    PDF.jsのJPEGデコーダーの互換性問題を回避し解析精度を向上させるため、
+    v1.2.0より <strong>PDFファイルをそのままGemini APIに送信する方式</strong> に変更されました。<br><br>
+    <strong>ご注意:</strong> 画像PDFには患者氏名が画像として含まれる可能性があるため、
+    Google AI Studio の <strong>有料プランのAPIキー</strong> のご利用を強く推奨します。
+    無料枠（Free Tier）のAPIキーで送信されたデータはGoogleのモデル学習に利用される可能性があります
+    （詳細はGoogleの利用規約をご確認ください）。
   </div>
 
-  <p>送信されたデータの取り扱いは、Googleの「<a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API追加利用規約</a>」および「<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Googleプライバシーポリシー</a>」に従います。</p>
+  <p>送信されたデータの取り扱いは、Googleの「<a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API追加利用規約</a>」
+  および「<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Googleプライバシーポリシー</a>」に従います。</p>
 
-  <h2>4. データの販売・共有</h2>
-  <p>本拡張機能は、ユーザーデータを第三者へ販売・貸与・共有することは一切ありません。また、収集されたデータを信用力の判断や融資目的に使用・転送することもありません。</p>
+  <!-- Limited Use 準拠 -->
+  <h2>6. Google API ユーザーデータポリシー（Limited Use）への準拠</h2>
+  <p>本拡張機能は、Google Gemini API を利用するにあたり、Google API サービスのユーザーデータポリシー
+  （Limited Use 要件）を遵守します。</p>
+  <ul>
+    <li>取得した医療データは、本拡張機能の<strong>単一の目的（治療指標の抽出と下書き生成）</strong>のためにのみ使用します。</li>
+    <li>取得したデータを<strong>広告目的</strong>には一切使用しません。</li>
+    <li>取得したデータを、開発者を含むいかなる<strong>人間が読み取ることもありません</strong>
+      （Gemini API への送信時を除き、すべてユーザーの端末内で処理されます）。</li>
+    <li>取得したデータを、本拡張機能のユーザーに表示・提供する目的以外で<strong>第三者へ転送しません</strong>。</li>
+  </ul>
 
-  <h2>5. アクセス範囲</h2>
-  <p>本拡張機能は、ユーザーが「現在のタブのPDFを読み込む」ボタンを押した時に限り、現在開いているタブのPDFファイルにアクセスします。電子カルテシステム（デジカル等）でPDFビューワーが開かれるドメインが固定でないため、ホスト権限は <code>&lt;all_urls&gt;</code> としていますが、ブラウジング履歴の収集や追跡、自動的なデータ収集は一切行いません。</p>
+  <!-- データ使用の誓約 -->
+  <h2>7. データの使用に関する誓約（Chrome ウェブストア開示事項）</h2>
+  <div class="pledge">
+    <ol>
+      <li>本拡張機能で扱うユーザーデータは、ユーザーが承認した目的（治療指標の抽出・下書き生成）のためにのみ使用します。</li>
+      <li>本拡張機能で扱うユーザーデータを、第三者へ<strong>販売・貸与・譲渡しません</strong>。
+        承認された使用法に当てはまらない目的（マーケティング・広告等）でも、第三者へ転送することはありません。</li>
+      <li>本拡張機能で扱うユーザーデータを、<strong>信用力の判断や融資目的</strong>に使用したり、
+        そのような目的のために第三者へ転送することは<strong>一切ありません</strong>。</li>
+    </ol>
+  </div>
 
-  <h2>6. 医療安全に関する補足</h2>
-  <p>本拡張機能は、医師の文書作成業務を補助する目的のツールであり、診断や治療判断を代替するものではありません。生成された下書きメッセージは、必ず医師がその内容を確認した上で利用するものとします。AI整文機能による文章整形は表現の調整のみを行い、医学的判断は行いません。</p>
+  <!-- 医療安全 -->
+  <h2>8. 医療安全に関する補足</h2>
+  <p>本拡張機能は、医師の文書作成業務を補助する目的のツールであり、診断や治療判断を代替するものではありません。
+  生成された下書きメッセージは、必ず医師がその内容を確認した上で利用するものとします。
+  AI整文機能による文章整形は表現の調整のみを行い、医学的判断は行いません。</p>
 
-  <h2>7. ポリシーの変更</h2>
+  <!-- ポリシーの変更 -->
+  <h2>9. ポリシーの変更</h2>
   <p>本プライバシーポリシーは、必要に応じて改定される場合があります。改定があった場合は、本ページの最終更新日を更新します。</p>
 
-  <h2>8. お問い合わせ</h2>
+  <!-- お問い合わせ -->
+  <h2>10. お問い合わせ</h2>
   <div class="contact">
     本プライバシーポリシーに関するご質問は、Chromeウェブストアの拡張機能ページよりお問い合わせください。<br>
     開発元: 春日すぐファミリークリニック（福岡県福岡市南区）
