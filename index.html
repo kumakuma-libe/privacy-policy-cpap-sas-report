@@ -151,7 +151,7 @@
       </tr>
       <tr>
         <td><code>storage</code></td>
-        <td>抽出された治療指標・下書きメッセージ・確認事項（警告）を一時保存（<code>chrome.storage.session</code>）し、Gemini APIキー・モデル名・施設名（任意設定）を永続保存（<code>chrome.storage.local</code>）するため。</td>
+        <td>PDFから読み取った文字（先頭5,000字まで）・ファイル名・PDFのURL・抽出された治療指標・下書きメッセージ・確認事項（警告）を一時保存（<code>chrome.storage.session</code>。3項の条件で消去）し、Gemini APIキー・モデル名・施設名（任意設定）を永続保存（<code>chrome.storage.local</code>）するため。</td>
       </tr>
       <tr>
         <td><code>clipboardWrite</code></td>
@@ -210,8 +210,8 @@
       <ul>
         <li><strong>(a)</strong> PDFにテキスト層が無い（スキャンした画像PDF）場合、
           またはレポートの種別を判定できなかった場合</li>
-        <li><strong>(b)</strong> CPAP治療レポートで、メーカーがフィリップス以外
-          （レスメド、フクダ電子、帝人ファーマ、日本光電、チェスト、エア・ウォーター、メーカー不明など）の場合に、
+        <li><strong>(b)</strong> CPAP治療レポートのうち、専用の読み取り処理を持たないもの
+          （フィリップス製以外のすべて。メーカーを判定できなかった場合を含む）で、
           端末内での自動抽出だけでは必要な項目が揃わなかったとき。
           この場合は<strong>テキスト層を持つPDFであってもファイル本体が送信されます</strong>。</li>
       </ul>
